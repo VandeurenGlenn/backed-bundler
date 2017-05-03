@@ -1,0 +1,10 @@
+{
+  "generator-backed-element": {
+    "promptValues": {
+      "authorName": "Glenn Vandeuren",
+      "authorEmail": "vandeurenglenn@gmail.com",
+      "authorUrl": "",
+      "license": true
+    }
+  }
+}
