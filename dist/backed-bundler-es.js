@@ -1,6 +1,8 @@
 import { query } from 'dom5';
 import { parse, serialize } from 'parse5';
+import { AllHtmlEntities } from 'html-entities';
 
+const decode = AllHtmlEntities.decode;
 const validateOptions = (entry, html, js, css) => {
   if (entry === null) {
     return console.warn('entry::undefined, please defined on in bundler.options.');
@@ -109,7 +111,7 @@ const bundle = ({ entry, html, js, css, script, body }, removeExternalScript) =>
     removeChild(script);
   }
   replaceChild(entry, body);
-  return serialize(entry);
+  return decode(serialize(entry));
 };
 var backedBundler = (({ entry = null, html = null, js = null, css = null, removeExternalScript = true }) => {
   validateOptions(entry, html, js, css);

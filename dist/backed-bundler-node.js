@@ -2,7 +2,9 @@
 
 var dom5 = require('dom5');
 var parse5 = require('parse5');
+var htmlEntities = require('html-entities');
 
+const decode = htmlEntities.AllHtmlEntities.decode;
 const validateOptions = (entry, html, js, css) => {
   if (entry === null) {
     return console.warn('entry::undefined, please defined on in bundler.options.');
@@ -111,7 +113,7 @@ const bundle = ({ entry, html, js, css, script, body }, removeExternalScript) =>
     removeChild(script);
   }
   replaceChild(entry, body);
-  return parse5.serialize(entry);
+  return decode(parse5.serialize(entry));
 };
 var backedBundler = (({ entry = null, html = null, js = null, css = null, removeExternalScript = true }) => {
   validateOptions(entry, html, js, css);
