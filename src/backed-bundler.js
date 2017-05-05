@@ -1,6 +1,9 @@
 'use strict;'
 import { query } from 'dom5';
 import { parse, serialize } from 'parse5';
+import { AllHtmlEntities } from 'html-entities';
+
+const decode = AllHtmlEntities.decode
 
 const validateOptions = (entry, html, js, css) => {
   if (entry === null) {
@@ -147,7 +150,7 @@ const bundle = ({entry, html, js, css, script, body}, removeExternalScript) => {
     removeChild(script);
   }
   replaceChild(entry, body);
-  return serialize(entry);
+  return decode(serialize(entry));
 }
 /**
  * @param {string} entry The file to bundle everything in
