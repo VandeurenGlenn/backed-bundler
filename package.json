@@ -1,8 +1,8 @@
 {
   "name": "backed-bundler",
   "version": "0.1.0",
-  "main": "dist/backed-bundler.js",
-  "module": "dist/backed-bundler-es.js",
+  "main": "lib/backed-bundler-node.js",
+  "module": "lib/backed-bundler-es.js",
   "author": {
     "name": "Glenn Vandeuren",
     "email": "vandeurenglenn@gmail.com",
@@ -16,46 +16,28 @@
     "backed": "*",
     "backed5-element": "^0.1.2",
     "dom5": "^2.2.0",
+    "html-entities": "^1.2.1",
     "parse5": "^3.0.2"
   },
   "esdoc": {
     "source": "./src/backed-bundler.js",
     "destination": "./docs"
   },
-  "repository": "vandeurenglenn@gmail.com/backed-bundler",
-  "private": true,
+  "repository": "https://github.com/vandeurenglenn/backed-bundler",
   "backed": {
     "bundles": [
       {
         "src": "src/backed-bundler.js",
-        "dest": "dist/backed-bundler.js",
+        "dest": "lib/backed-bundler.js",
         "moduleName": "backedBundler",
         "format": "cjs"
       },
       {
         "src": "src/backed-bundler.js",
-        "dest": "dist/backed-bundler.js",
+        "dest": "lib/backed-bundler.js",
         "format": "es"
       }
-    ],
-    "sources": [
-      {
-        "src": [
-          "src/*.html"
-        ],
-        "dest": "dist"
-      },
-      {
-        "src": [
-          "node_modules/backed/backed.html",
-          "node_modules/backed/dist/backed.js"
-        ],
-        "dest": "dist/node_modules"
-      }
-    ],
-    "server": {
-      "demo": "dist"
-    }
+    ]
   },
   "devDependencies": {
     "mocha": "^3.3.0"
