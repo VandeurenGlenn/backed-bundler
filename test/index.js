@@ -1,6 +1,6 @@
 const assert = require('assert');
 const readFile = require('fs').readFile;
-const bundler = require('./../dist/backed-bundler-node');
+const bundler = require('./../lib/backed-bundler-node');
 
 const read = path => {
   return new Promise((resolve, reject) => {
@@ -23,9 +23,10 @@ describe('backed-bundler test suite', () => {
     ];
 
     Promise.all(promises).then(files => {
-      bundler({entry: files[0], html: files[1], js: files[2], css: files[3]});
-
-      done();
+      const result = bundler({entry: files[0], html: files[1], js: files[2], css: files[3]});
+      if (!result.match(/&gt;/g) && !result.match(/&lt;/g)) {
+        done();
+      }
     })
   });
 });
