@@ -106,10 +106,9 @@ const prepareEach = (value = {}, tag = null) => {
         attrs: [],
         value: value
       }]
-    } else if (tag === 'html') {
-      node.nodeName = 'template';
-      node.tagName = undefined;
-      node.content = value.toString();
+    } else if (tag === 'template') {
+      node.nodeName = '#text';
+      delete node.tagName;
     } else if (tag === 'style') {
       node.childNodes = [{
         nodeName: '#text',
@@ -130,7 +129,7 @@ const prepare = ({entry, html, js, css}) => {
 
   css = prepareEach(css, 'style');
   js = prepareEach(js, 'script');
-  html = prepareEach(html, 'html');
+  html = prepareEach(html, 'template');
 
   return {
     entry: entry,
@@ -142,11 +141,11 @@ const prepare = ({entry, html, js, css}) => {
   }
 }
 
-const bundle = ({entry, html, js, css, script, body}, removeExternalScript) => {
+const bundle = ({entry, html, js, css, script, body}, externalScripts) => {
   if (css) appendChild(body, css);
   if (html) appendChild(body, html);
   if (js) appendChild(body, js);
-  if (script && removeExternalScript && script.attrs[0].name === 'src') {
+  if (script && externalScripts && script.attrs[0].name === 'src') {
     removeChild(script);
   }
   replaceChild(entry, body);
@@ -157,10 +156,10 @@ const bundle = ({entry, html, js, css, script, body}, removeExternalScript) => {
  * @param {string} html An html or set of html's to include
  * @param {string} js An script or set of scripts to include
  * @param {string} css An stylesheet or set of stylesheets to include
- * @param {string} removeExternalScript Wether or not to include external js
+ * @param {string} externalScripts Wether or not to include external js
  */
-export default ({entry = null, html = null, js = null, css = null, removeExternalScript = true}) => {
+export default ({entry = null, html = null, js = null, css = null, externalScripts = true}) => {
     validateOptions(entry, html, js, css);
 
-    return bundle(prepare({entry: entry, html: html, js: js, css: css}), {removeExternalScript: removeExternalScript});
+    return bundle(prepare({entry: entry, html: html, js: js, css: css}), {externalScripts: externalScripts});
 }
