@@ -1,6 +1,6 @@
 {
   "name": "backed-bundler",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "main": "lib/backed-bundler-node.js",
   "module": "lib/backed-bundler-es.js",
   "author": {
@@ -9,6 +9,7 @@
     "url": ""
   },
   "scripts": {
+    "deploy": "npm run build && yarn upgrade && npm run test && npm publish",
     "build": "backed -b",
     "test": "mocha"
   },
