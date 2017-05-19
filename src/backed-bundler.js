@@ -5,12 +5,15 @@ import { AllHtmlEntities } from 'html-entities';
 
 const decode = AllHtmlEntities.decode
 
-const validateOptions = (entry, html, js, css) => {
-  if (entry === null) {
-    return console.warn('entry::undefined, please defined on in bundler.options.');
+const validateOptions = (entry, html, js, css, element) => {
+  if (typeof element !== 'boolean') {
+    throw 'element is not a typeof Boolean';
+  } else if (entry === null && !element) {
+    throw 'entry::undefined, please defined on in bundler.options.';
   } else if (!html && !js && !css) {
-    return console.warn('Nothing to bundle, checkout the README to get started');
+    throw 'Nothing to bundle, checkout the README to get started';
   }
+
 }
 
 /**
@@ -45,7 +48,8 @@ const needsParse = source => {
 }
 
 const replaceChild = (target, node) => {
-  const childNodes = target.childNodes[1].childNodes;
+  const targetNodes = target.childNodes[1] || target.childNodes[0];
+  const childNodes = targetNodes.childNodes;
   let index;
   for (let child of childNodes) {
     if (child.nodeName && child.nodeName === node.nodeName) {
@@ -122,7 +126,7 @@ const prepareEach = (value = {}, tag = null) => {
   }
 }
 
-const prepare = ({entry, html, js, css}) => {
+const prepareDocument = ({entry, html, js, css}) => {
   if (needsParse(entry)) entry = parse(entry);
   const script = query(entry, queryScript);
   const body = query(entry, queryBody);
@@ -141,11 +145,19 @@ const prepare = ({entry, html, js, css}) => {
   }
 }
 
+const bundleElement = ({html = '', js = '', css = ''}) => {
+  css += html;
+  css += js;
+
+  return css
+}
+
 const bundle = ({entry, html, js, css, script, body}, externalScripts) => {
   if (css) appendChild(body, css);
   if (html) appendChild(body, html);
   if (js) appendChild(body, js);
-  if (script && externalScripts && script.attrs[0].name === 'src') {
+  if (script && externalScripts && script.attrs && script.attrs.length > 0 &&
+      script.attrs[0].name === 'src') {
     removeChild(script);
   }
   replaceChild(entry, body);
@@ -158,8 +170,15 @@ const bundle = ({entry, html, js, css, script, body}, externalScripts) => {
  * @param {string} css An stylesheet or set of stylesheets to include
  * @param {string} externalScripts Wether or not to include external js
  */
-export default ({entry = null, html = null, js = null, css = null, externalScripts = true}) => {
-    validateOptions(entry, html, js, css);
+export default ({entry = null, html = null, js = null, css = null, externalScripts = true, element = false}) => {
 
-    return bundle(prepare({entry: entry, html: html, js: js, css: css}), {externalScripts: externalScripts});
+  try {
+    validateOptions(entry, html, js, css, element);
+    if (element) {
+      return bundleElement({html: html, js: js, css});
+    }
+    return bundle(prepareDocument({entry: entry, html: html, js: js, css: css}), {externalScripts: externalScripts});
+  } catch (error) {
+    return new Error(error);
+  }
 }
