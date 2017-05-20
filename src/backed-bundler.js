@@ -146,10 +146,19 @@ const prepareDocument = ({entry, html, js, css}) => {
 }
 
 const bundleElement = ({html = '', js = '', css = ''}) => {
+  if (html && js) {
+    const parts = {};
+    const firstTag = html.lastIndexOf('<script>');
+    const lastTag = html.lastIndexOf('</script>') + 9;
+    parts.first = html.slice(0, firstTag);
+    parts.last = html.slice(lastTag);
+    html = `${parts.first}<script>\n${js}\n</script>${parts.last}`;
+  }
   css += html;
-  css += js;
-
-  return css
+  if (!html && js) {
+    css += js;
+  }
+  return css;
 }
 
 const bundle = ({entry, html, js, css, script, body}, externalScripts) => {
@@ -171,7 +180,6 @@ const bundle = ({entry, html, js, css, script, body}, externalScripts) => {
  * @param {string} externalScripts Wether or not to include external js
  */
 export default ({entry = null, html = null, js = null, css = null, externalScripts = true, element = false}) => {
-
   try {
     validateOptions(entry, html, js, css, element);
     if (element) {
