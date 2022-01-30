@@ -17,7 +17,7 @@
     "backed": "*",
     "backed5-element": "^0.1.2",
     "dom5": "^2.2.0",
-    "html-entities": "^1.2.1",
+    "html-entities": "^1.4.0",
     "parse5": "^3.0.2"
   },
   "esdoc": {
